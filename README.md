@@ -8,6 +8,9 @@ UV는 Rust로 작성된 매우 빠른 Python 패키지 및 프로젝트 관리�
 3. [기본 사용법](#기본-사용법)
 4. [UV vs pip 비교](#uv-vs-pip-비교)
 5. [실습 튜토리얼](#실습-튜토리얼)
+6. [UV 명령어 사용법](#uv-명령어-사용법)
+7. [실전 활용 예제](#실전-활용-예제)
+8. [문제 해결](#문제-해결)
 
 ## UV 소개
 
@@ -35,87 +38,6 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 ```bash
 pip install uv
 ```
-
-## 설치 문제 해결
-
-### Fish 쉘 설정 오류 해결
-
-UV 설치 시 다음과 같은 오류가 발생할 수 있습니다:
-```bash
-mkdir: /Users/username/.config/fish/conf.d: Permission denied
-ERROR: command failed: mkdir -p /Users/username/.config/fish/conf.d
-```
-
-이 오류는 fish 쉘 설정 디렉토리에 대한 권한 문제입니다. 다음과 같은 방법으로 해결할 수 있습니다:
-
-#### 방법 1: 수동으로 디렉토리 생성
-```bash
-# 디렉토리 생성
-mkdir -p ~/.config/fish/conf.d
-
-# 권한 설정
-chmod 755 ~/.config/fish
-chmod 755 ~/.config/fish/conf.d
-
-# 다시 UV 설치
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-#### 방법 2: sudo 없이 설치
-```bash
-# sudo를 제거하고 설치
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-#### 방법 3: 수동 설치
-```bash
-# UV 바이너리 다운로드
-curl -L https://github.com/astral-sh/uv/releases/download/v0.6.16/uv-aarch64-apple-darwin -o uv
-
-# 실행 권한 부여
-chmod +x uv
-
-# 설치 디렉토리로 이동
-mv uv ~/.local/bin/
-```
-
-### 설치 확인
-```bash
-# UV 버전 확인
-uv --version
-
-# fish 쉘 설정 확인
-cat ~/.config/fish/conf.d/uv.fish
-```
-
-### 추가 문제 해결
-
-1. **PATH 설정 문제**
-   - `~/.local/bin`이 PATH에 포함되어 있는지 확인:
-   ```bash
-   echo $PATH
-   ```
-   - 포함되어 있지 않다면 `~/.bashrc` 또는 `~/.zshrc`에 추가:
-   ```bash
-   export PATH="$HOME/.local/bin:$PATH"
-   ```
-
-2. **권한 문제**
-   - `~/.local/bin` 디렉토리의 권한 확인:
-   ```bash
-   ls -ld ~/.local/bin
-   ```
-   - 필요한 경우 권한 수정:
-   ```bash
-   chmod 755 ~/.local/bin
-   ```
-
-3. **캐시 문제**
-   - 설치 캐시 삭제 후 재시도:
-   ```bash
-   rm -rf ~/.cache/uv
-   curl -LsSf https://astral.sh/uv/install.sh | sh
-   ```
 
 ## 기본 사용법
 
@@ -698,6 +620,87 @@ for version in 3.9 3.10 3.11; do
     uv run --python $version mypy .
 done
 ```
+
+## 문제 해결
+
+### Fish 쉘 설정 오류 해결
+
+UV 설치 시 다음과 같은 오류가 발생할 수 있습니다:
+```bash
+mkdir: /Users/username/.config/fish/conf.d: Permission denied
+ERROR: command failed: mkdir -p /Users/username/.config/fish/conf.d
+```
+
+이 오류는 fish 쉘 설정 디렉토리에 대한 권한 문제입니다. 다음과 같은 방법으로 해결할 수 있습니다:
+
+#### 방법 1: 수동으로 디렉토리 생성
+```bash
+# 디렉토리 생성
+mkdir -p ~/.config/fish/conf.d
+
+# 권한 설정
+chmod 755 ~/.config/fish
+chmod 755 ~/.config/fish/conf.d
+
+# 다시 UV 설치
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+#### 방법 2: sudo 없이 설치
+```bash
+# sudo를 제거하고 설치
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+#### 방법 3: 수동 설치
+```bash
+# UV 바이너리 다운로드
+curl -L https://github.com/astral-sh/uv/releases/download/v0.6.16/uv-aarch64-apple-darwin -o uv
+
+# 실행 권한 부여
+chmod +x uv
+
+# 설치 디렉토리로 이동
+mv uv ~/.local/bin/
+```
+
+### 설치 확인
+```bash
+# UV 버전 확인
+uv --version
+
+# fish 쉘 설정 확인
+cat ~/.config/fish/conf.d/uv.fish
+```
+
+### 추가 문제 해결
+
+1. **PATH 설정 문제**
+   - `~/.local/bin`이 PATH에 포함되어 있는지 확인:
+   ```bash
+   echo $PATH
+   ```
+   - 포함되어 있지 않다면 `~/.bashrc` 또는 `~/.zshrc`에 추가:
+   ```bash
+   export PATH="$HOME/.local/bin:$PATH"
+   ```
+
+2. **권한 문제**
+   - `~/.local/bin` 디렉토리의 권한 확인:
+   ```bash
+   ls -ld ~/.local/bin
+   ```
+   - 필요한 경우 권한 수정:
+   ```bash
+   chmod 755 ~/.local/bin
+   ```
+
+3. **캐시 문제**
+   - 설치 캐시 삭제 후 재시도:
+   ```bash
+   rm -rf ~/.cache/uv
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   ```
 
 ## 결론
 
