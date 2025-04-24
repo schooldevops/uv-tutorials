@@ -1,16 +1,17 @@
-# UV 튜토리얼
+# 이제 PIP 대신에 uv를 사용하기
 
 UV는 Rust로 작성된 매우 빠른 Python 패키지 및 프로젝트 관리자입니다. 이 튜토리얼에서는 UV의 설치부터 기본적인 사용법까지 단계별로 알아보겠습니다.
 
 ## 목차
 1. [UV 소개](#uv-소개)
-2. [설치 방법](#설치-방법)
-3. [기본 사용법](#기본-사용법)
-4. [UV vs pip 비교](#uv-vs-pip-비교)
-5. [실습 튜토리얼](#실습-튜토리얼)
-6. [UV 명령어 사용법](#uv-명령어-사용법)
-7. [실전 활용 예제](#실전-활용-예제)
-8. [문제 해결](#문제-해결)
+2. [pip vs uv 비교](#pip-vs-uv-비교)
+3. [설치 방법](#설치-방법)
+4. [기본 사용법](#기본-사용법)
+5. [UV vs pip 비교](#uv-vs-pip-비교)
+6. [실습 튜토리얼](#실습-튜토리얼)
+7. [UV 명령어 사용법](#uv-명령어-사용법)
+8. [실전 활용 예제](#실전-활용-예제)
+9. [문제 해결](#문제-해결)
 
 ## UV 소개
 
@@ -21,6 +22,49 @@ UV는 Python 패키지 관리와 프로젝트 관리를 위한 현대적인 도�
 - 🗂️ 종합적인 프로젝트 관리 기능
 - 💾 디스크 공간 효율적인 전역 캐시
 - 🖥️ macOS, Linux, Windows 지원
+
+관련 github: https://github.com/astral-sh/uv
+
+## pip vs uv 비교
+
+| 작업 | pip + venv | uv |
+|------|------------|----|
+| **프로젝트 초기화** | `mkdir my-project`<br>`cd my-project`<br>`python -m venv .venv` | `uv init my-project`<br>`cd my-project` |
+| **가상환경 생성** | `python -m venv .venv` | 자동 생성 (uv init 시) |
+| **가상환경 활성화** | macOS/Linux:<br>`source .venv/bin/activate`<br>Windows:<br>`.venv\Scripts\activate` | 자동 활성화 (패키지 설치/실행 시) |
+| **패키지 설치** | `pip install requests` | `uv pip install requests`<br>또는<br>`uv add requests` |
+| **의존성 관리** | `pip freeze > requirements.txt`<br>`pip install -r requirements.txt` | `uv pip freeze > requirements.txt`<br>`uv pip install -r requirements.txt`<br>또는<br>`uv lock`<br>`uv sync` |
+| **패키지 실행** | `python -m pytest` | `uv run pytest` |
+| **개발 의존성 설치** | `pip install --dev pytest` | `uv add --dev pytest` |
+| **패키지 제거** | `pip uninstall requests` | `uv pip uninstall requests`<br>또는<br>`uv remove requests` |
+| **패키지 업그레이드** | `pip install --upgrade requests` | `uv pip install --upgrade requests` |
+| **Python 버전 관리** | 수동 설치 및 관리 | `uv python install 3.11`<br>`uv run --python 3.11 script.py` |
+| **의존성 해결** | 순차적 처리 | 병렬 처리 (PubGrub 알고리즘) |
+| **캐시 관리** | 프로젝트별 캐시 | 전역 캐시 시스템 |
+| **디스크 공간** | 각 프로젝트별 복사본 | 하드 링크 사용으로 효율적 |
+| **네트워크 최적화** | HTTP/1.1 | HTTP/2 지원, 연결 풀링 |
+
+### 주요 차이점 설명
+
+1. **자동화된 가상환경 관리**
+   - pip: 수동으로 가상환경을 생성하고 활성화해야 함
+   - uv: 프로젝트 초기화 시 자동으로 가상환경 생성, 패키지 설치/실행 시 자동 활성화
+
+2. **의존성 관리 방식**
+   - pip: 기본적인 패키지 설치/제거 기능
+   - uv: 프로젝트 의존성을 체계적으로 관리 (`uv add`), 버전 잠금 기능 (`uv lock`)
+
+3. **성능 최적화**
+   - pip: 순차적 처리, 프로젝트별 캐시
+   - uv: 병렬 처리, 전역 캐시, 하드 링크 사용
+
+4. **Python 버전 관리**
+   - pip: Python 버전 관리를 지원하지 않음
+   - uv: 통합된 Python 버전 관리 기능 제공
+
+5. **명령어 구조**
+   - pip: 단순한 명령어 구조
+   - uv: 더 풍부한 명령어 옵션과 프로젝트 관리 기능
 
 ## 설치 방법
 
