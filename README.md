@@ -125,10 +125,111 @@ uv pip install requests
 ```
 
 ### 2. 프로젝트 초기화
+
+아래 명령은 uv를 특정 디렉토리에 초기화 하는 방법이다. 
+
 ```bash
 uv init my-project
 cd my-project
 ```
+
+현재 디렉토리에서 uv를 초기화 한다면 다음과 같이 작성하자. 
+
+```bash
+uv init
+```
+
+#### UV 초기화 시 생성되는 파일들
+
+UV 초기화 시 다음과 같은 파일들이 생성됩니다:
+
+1. **`pyproject.toml`**
+   - 프로젝트의 메타데이터와 설정을 저장하는 파일
+   - 주요 내용:
+     ```toml
+     [project]
+     name = "my-project"
+     version = "0.1.0"
+     description = ""
+     authors = []
+     dependencies = []
+     requires-python = ">=3.8"
+
+     [build-system]
+     requires = ["hatchling"]
+     build-backend = "hatchling.build"
+
+     [tool.uv]
+     # UV 관련 설정
+     ```
+
+2. **`.python-version`**
+   - 프로젝트에서 사용할 Python 버전을 지정하는 파일
+   - 내용 예시:
+     ```
+     3.11
+     ```
+
+3. **`requirements.txt`**
+   - 프로젝트의 의존성 목록을 저장하는 파일
+   - 초기에는 비어있음
+   - `uv pip freeze` 명령으로 업데이트됨
+
+4. **`requirements-dev.txt`**
+   - 개발 환경에서만 필요한 의존성 목록을 저장하는 파일
+   - 초기에는 비어있음
+   - `uv pip freeze --dev` 명령으로 업데이트됨
+
+5. **`.venv/` 디렉토리**
+   - 가상환경이 생성되는 디렉토리
+   - Python 인터프리터와 설치된 패키지들이 저장됨
+   - 주요 하위 디렉토리:
+     - `bin/` (Unix) 또는 `Scripts/` (Windows): 실행 파일들이 위치
+     - `lib/`: 설치된 패키지들이 위치
+     - `include/`: C 확장 모듈 헤더 파일들이 위치
+
+6. **`uv.lock`**
+   - 의존성의 정확한 버전을 잠그는 파일
+   - `uv lock` 명령으로 생성/업데이트됨
+   - 내용 예시:
+     ```toml
+     [package]
+     requests = "2.31.0"
+     numpy = "1.24.0"
+     ```
+
+#### 파일 관리 팁
+
+1. **`.gitignore`에 추가할 항목**
+   ```gitignore
+   # UV 관련
+   .venv/
+   __pycache__/
+   *.pyc
+   .python-version
+   uv.lock
+   ```
+
+2. **파일 업데이트 방법**
+   ```bash
+   # 의존성 추가 후 잠금 파일 업데이트
+   uv add requests
+   uv lock
+
+   # requirements.txt 업데이트
+   uv pip freeze > requirements.txt
+   uv pip freeze --dev > requirements-dev.txt
+   ```
+
+3. **파일 복원 방법**
+   ```bash
+   # requirements.txt로부터 의존성 설치
+   uv pip install -r requirements.txt
+   uv pip install -r requirements-dev.txt
+
+   # 잠금 파일로부터 정확한 버전 설치
+   uv sync
+   ```
 
 ### 3. 의존성 추가
 ```bash
