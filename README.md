@@ -236,6 +236,92 @@ UV 초기화 시 다음과 같은 파일들이 생성됩니다:
 uv add requests
 ```
 
+#### `uv add` vs `uv pip install` 명령어 비교
+
+UV는 패키지 설치를 위한 두 가지 주요 명령어를 제공합니다. 각 명령어의 특징과 차이점을 알아보겠습니다:
+
+1. **`uv add` 명령어**
+   - **프로젝트 의존성 관리에 최적화**
+     - `pyproject.toml` 파일에 의존성을 자동으로 추가
+     - 프로젝트의 의존성 목록을 체계적으로 관리
+     - 개발 의존성과 일반 의존성을 명확히 구분
+   - **사용 예시**:
+     ```bash
+     # 기본 의존성 추가
+     uv add requests
+     
+     # 개발 의존성 추가
+     uv add --dev pytest
+     
+     # 특정 버전 추가
+     uv add requests==2.31.0
+     
+     # 로컬 패키지 추가
+     uv add -e ./local-package
+     ```
+   - **주요 특징**:
+     - 프로젝트 의존성 목록을 자동으로 업데이트
+     - 의존성 버전을 명시적으로 관리
+     - 개발 환경과 프로덕션 환경의 의존성을 구분
+     - 로컬 패키지 개발에 최적화
+
+2. **`uv pip install` 명령어**
+   - **일반적인 패키지 설치에 최적화**
+     - pip와 유사한 사용법 제공
+     - 전역 또는 가상환경에 패키지 설치
+     - 프로젝트 의존성 목록에 자동으로 추가되지 않음
+   - **사용 예시**:
+     ```bash
+     # 기본 설치
+     uv pip install requests
+     
+     # 특정 버전 설치
+     uv pip install requests==2.31.0
+     
+     # requirements.txt로부터 설치
+     uv pip install -r requirements.txt
+     
+     # 개발 모드 설치
+     uv pip install -e ./local-package
+     ```
+   - **주요 특징**:
+     - pip와 호환되는 명령어 구조
+     - 즉시 패키지 설치 가능
+     - 의존성 목록 관리 없이 빠른 설치
+     - 임시 패키지 설치에 적합
+
+3. **언제 어떤 명령어를 사용해야 할까?**
+   - **`uv add` 사용이 권장되는 경우**:
+     - 프로젝트의 의존성을 체계적으로 관리할 때
+     - 개발 의존성과 프로덕션 의존성을 구분해야 할 때
+     - 의존성 버전을 명시적으로 관리해야 할 때
+     - 팀 프로젝트에서 의존성을 공유해야 할 때
+   
+   - **`uv pip install` 사용이 권장되는 경우**:
+     - 일회성 패키지 설치가 필요할 때
+     - 임시로 패키지를 테스트할 때
+     - pip 명령어와의 호환성이 필요할 때
+     - 의존성 목록 관리가 필요 없을 때
+
+4. **실제 사용 예시**:
+   ```bash
+   # 프로젝트 초기 설정
+   uv init my-project
+   cd my-project
+   
+   # 프로젝트 의존성 추가 (uv add 사용)
+   uv add requests  # 기본 의존성
+   uv add --dev pytest  # 개발 의존성
+   
+   # 일회성 패키지 설치 (uv pip install 사용)
+   uv pip install ipython  # 대화형 개발용
+   uv pip install black  # 코드 포맷팅
+   
+   # 의존성 목록 업데이트
+   uv lock  # 의존성 잠금
+   uv pip freeze > requirements.txt  # requirements.txt 생성
+   ```
+
 ### 4. 가상환경 생성
 ```bash
 uv venv
